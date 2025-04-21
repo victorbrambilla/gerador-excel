@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react"
 import type { ColumnDefinition } from "@/lib/interfaces"
 import { fakerOptionsList } from "@/lib/fakerMappings"
+import { TagInput } from "@/components/ui/tag-input"
 
 interface ColumnDefinitionProps {
   column: ColumnDefinition
@@ -31,11 +32,12 @@ export default function ColumnDefinitionComponent({
 
   const handleFakerMappingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newKey = e.target.value
-    // Limpa o valor personalizado se a opção mudar para algo que não seja custom
+    // Limpa os valores específicos quando muda o tipo
     const updatedColumn = {
       ...column,
       fakerMappingKey: newKey,
       customValue: newKey === "##CUSTOM_VALUE##" ? column.customValue : undefined,
+      randomOptions: newKey === "##RANDOM_OPTIONS##" ? column.randomOptions : undefined,
     }
     onUpdate(updatedColumn)
   }
@@ -45,6 +47,19 @@ export default function ColumnDefinitionComponent({
     const value = e.target.value
     setCustomValueInput(value) // Atualiza o estado local imediatamente
     onUpdate({ ...column, customValue: value })
+  }
+  
+  // Handlers para o TagInput de opções aleatórias
+  const handleRandomOptionAdd = (tag: string) => {
+    const currentOptions = column.randomOptions || []
+    const updatedOptions = [...currentOptions, tag]
+    onUpdate({ ...column, randomOptions: updatedOptions })
+  }
+  
+  const handleRandomOptionRemove = (tagToRemove: string) => {
+    const currentOptions = column.randomOptions || []
+    const updatedOptions = currentOptions.filter(tag => tag !== tagToRemove)
+    onUpdate({ ...column, randomOptions: updatedOptions })
   }
 
   return (
@@ -127,6 +142,25 @@ export default function ColumnDefinitionComponent({
                 </svg>
               </div>
             </div>
+          </div>
+        )}
+        
+        {column.fakerMappingKey === "##RANDOM_OPTIONS##" && (
+          <div className="flex-1 min-w-[200px]">
+            <label htmlFor={`random-options-${column.id}`} className="block text-sm font-medium text-gray-700 mb-1">
+              Valores Aleatórios
+            </label>
+            <TagInput
+              id={`random-options-${column.id}`}
+              tags={column.randomOptions || []}
+              onTagAdd={handleRandomOptionAdd}
+              onTagRemove={handleRandomOptionRemove}
+              placeholder="Digite um valor e pressione Enter"
+              className="w-full bg-white"
+            />
+            <p className="text-xs text-gray-500 mt-1.5 ml-1">
+              Digite um valor (ex: cpf) e pressione Enter para adicionar. Repita o processo para cada valor.
+            </p>
           </div>
         )}
 

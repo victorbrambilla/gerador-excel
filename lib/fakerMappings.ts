@@ -30,4 +30,5 @@ export const fakerOptionsList: FakerOption[] = [
   { key: "company.name", label: "Empresa: Nome" },
   { key: "##EMPTY##", label: "Valor: Vazio" },
   { key: "##CUSTOM_VALUE##", label: "Valor Fixo (Personalizado)" },
+  { key: "##RANDOM_OPTIONS##", label: "Valor Aleatório (Entre Opções)" },
 ]

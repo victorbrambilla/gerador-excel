@@ -57,7 +57,7 @@ export function generateValue(
   column: ColumnDefinition, // Alterado para receber o objeto ColumnDefinition completo
   rowIndex: number,
 ): any {
-  const { fakerMappingKey, customValue } = column // Desestruturar para obter a chave e o valor personalizado
+  const { fakerMappingKey, customValue, randomOptions } = column // Desestruturar para obter todas as propriedades
 
   try {
     // Casos especiais
@@ -72,6 +72,15 @@ export function generateValue(
     // Caso para valor personalizado
     if (fakerMappingKey === "##CUSTOM_VALUE##") {
       return customValue !== undefined ? customValue : "" // Retorna o valor personalizado ou vazio se não definido
+    }
+    
+    // Caso para valores aleatórios entre opções específicas
+    if (fakerMappingKey === "##RANDOM_OPTIONS##") {
+      if (randomOptions && randomOptions.length > 0) {
+        const randomIndex = faker.number.int({ min: 0, max: randomOptions.length - 1 })
+        return randomOptions[randomIndex]
+      }
+      return "" // Retorna vazio se não houver opções definidas
     }
 
     // Casos customizados

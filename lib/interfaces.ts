@@ -3,6 +3,7 @@ export interface ColumnDefinition {
   headerName: string
   fakerMappingKey: string
   customValue?: string // Campo opcional para valor personalizado
+  randomOptions?: string[] // Novo campo para opções aleatórias
 }
 
 export interface SavedConfig {
